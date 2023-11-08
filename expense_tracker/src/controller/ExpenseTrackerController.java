@@ -15,6 +15,7 @@ public class ExpenseTrackerController {
   
   private ExpenseTrackerModel model;
   private ExpenseTrackerView view;
+  private List<Transaction> removedTransactions = new ArrayList<>();
   /** 
    * The Controller is applying the Strategy design pattern.
    * This is the has-a relationship with the Strategy class 
@@ -47,6 +48,7 @@ public class ExpenseTrackerController {
     
     Transaction t = new Transaction(amount, category);
     model.addTransaction(t);
+    removedTransactions.add(t);
     view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
     refresh();
     return true;
@@ -72,4 +74,27 @@ public class ExpenseTrackerController {
       view.toFront();}
 
   }
+  //new function to get removedTransaction function
+ public void removeTransaction(Transaction t) {
+  model.removeTransaction(t);
+  int rowIndex = removedTransactions.indexOf(t);
+  if (rowIndex != -1) {
+    view.getTableModel().removeRow(removedTransactions.indexOf(t));
+    removedTransactions.remove(t);
+    refresh(); }
+}
+
+
+  public void undoTransaction(Transaction t) {
+  // if (removedTransactions.contains(t)) {
+    model.removeTransaction(t);
+    view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
+    removedTransactions.remove(t);
+    refresh();
+  // }
+// Check if both transaction and removed transaction lists are empty
+  if (model.getTransactions().isEmpty() && removedTransactions.isEmpty()) {
+    view.getUndoButton().setEnabled(false);}
+
+}
 }
