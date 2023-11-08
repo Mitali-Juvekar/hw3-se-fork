@@ -1,3 +1,15 @@
+commit a5ade8f97079042ed4093aba71ee7e91cd485f40
+Author: Mitali Prakash Juvekar <mitalijuvekar@Mitalis-MacBook-Air.local>
+Date:   Wed Nov 8 15:46:11 2023 -0500
+
+    Modified the ExpenseTrackerController.java file to include a new list called removedTransactions, made new methods to implement the undo functionality.
+
+commit 159c3ddfdfb05253d07dc0a8dbde0702fb8dfe63
+Author: Mitali Prakash Juvekar <mitalijuvekar@Mitalis-MacBook-Air.local>
+Date:   Wed Nov 8 15:40:46 2023 -0500
+
+    Creation of git log file.
+
 commit be7403b8e990c3fe9cbe3731f4823790811b05da
 Author: Mitali Prakash Juvekar <mitalijuvekar@Mitalis-MacBook-Air.local>
 Date:   Wed Nov 8 15:39:02 2023 -0500

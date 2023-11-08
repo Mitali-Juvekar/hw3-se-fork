@@ -1,6 +1,7 @@
 import javax.swing.JOptionPane;
 import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
+import model.Transaction;
 import view.ExpenseTrackerView;
 import model.Filter.AmountFilter;
 import model.Filter.CategoryFilter;
@@ -67,7 +68,17 @@ public class ExpenseTrackerApp {
     JOptionPane.showMessageDialog(view,exception.getMessage());
     view.toFront();
    }});
-    
+
+   // Add action listener to the "Undo" button
+    view.getUndoButton().addActionListener(e -> {
+      int selectedRow = view.getTransactionsTable().getSelectedRow();
+      if (selectedRow >= 0) {
+        Transaction selectedTransaction = model.getTransactions().get(selectedRow);
+        controller.undoTransaction(selectedTransaction);
+     }
+
+
+});  
 
   }
 }
