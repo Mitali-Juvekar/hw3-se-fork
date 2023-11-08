@@ -16,6 +16,7 @@ public class ExpenseTrackerView extends JFrame {
 
   private JTable transactionsTable;
   private JButton addTransactionBtn;
+  private JButton undoButton; //undo button
   private JFormattedTextField amountField;
   private JTextField categoryField;
   private DefaultTableModel model;
@@ -41,6 +42,7 @@ public class ExpenseTrackerView extends JFrame {
     transactionsTable = new JTable(model);
 
     addTransactionBtn = new JButton("Add Transaction");
+    undoButton = new JButton("Undo"); //undo button ui in table
 
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");
@@ -71,10 +73,12 @@ public class ExpenseTrackerView extends JFrame {
     inputPanel.add(categoryLabel); 
     inputPanel.add(categoryField);
     inputPanel.add(addTransactionBtn);
+    inputPanel.add(undoButton); //this is to the input panel
 
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(amountFilterBtn);
     buttonPanel.add(categoryFilterBtn);
+    buttonPanel.add(undoButton); //this is to the button panel
   
     // Add panels to frame
     add(inputPanel, BorderLayout.NORTH);
@@ -133,6 +137,11 @@ public class ExpenseTrackerView extends JFrame {
     amountFilterBtn.addActionListener(listener);
   }
 
+  public void addUndoButtonListener(ActionListener listener) {
+    undoButton.addActionListener(listener);
+ }
+ 
+
   public double getAmountFilterInput() {
     String input = JOptionPane.showInputDialog(this, "Enter Amount Filter:");
     try {
@@ -172,6 +181,11 @@ public class ExpenseTrackerView extends JFrame {
   public JButton getAddTransactionBtn() {
     return addTransactionBtn;
   }
+  //undo button
+  public JButton getUndoButton() {
+    return undoButton;
+  }
+ 
 
 
   public void highlightRows(List<Integer> rowIndexes) {
