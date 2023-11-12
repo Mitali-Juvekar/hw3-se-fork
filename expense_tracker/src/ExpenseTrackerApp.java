@@ -69,16 +69,35 @@ public class ExpenseTrackerApp {
     view.toFront();
    }});
 
-   // Add action listener to the "Undo" button
     view.getUndoButton().addActionListener(e -> {
-      int selectedRow = view.getTransactionsTable().getSelectedRow();
-      if (selectedRow >= 0) {
-        Transaction selectedTransaction = model.getTransactions().get(selectedRow);
-        controller.undoTransaction(selectedTransaction);
-     }
+        try{
+        int selectedRow = view.getTransactionsTable().getSelectedRow();
+        if (selectedRow >= 0) {
+          view.getUndoButton().setEnabled(true);
+          Transaction selectedTransaction = model.getTransactions().get(selectedRow);
+          controller.undoTransaction(selectedTransaction);
+      }
+      }catch(IllegalArgumentException exception) {
+      JOptionPane.showMessageDialog(view,"Please select transaction to be deleted");
+      view.toFront();
+    }});
+
+  //  // Add action listener to the "Undo" button
+  //   view.getUndoButton().addActionListener(e -> {
+  //     int selectedRow = view.getTransactionsTable().getSelectedRow();
+  //     if (selectedRow >= 0) {
+  //       view.getUndoButton().setEnabled(true);
+  //       Transaction selectedTransaction = model.getTransactions().get(selectedRow);
+  //       controller.undoTransaction(selectedTransaction);
+  //    }
+  //    else{
+  //     // view.getUndoButton().setEnabled(false);
+  //     throw new IllegalArgumentException("Please select transaction to be deleted");
+  //    }
 
 
-});  
+  //   });  
+
 
   }
 }

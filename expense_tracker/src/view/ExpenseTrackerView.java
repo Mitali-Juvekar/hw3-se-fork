@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 
 import model.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpenseTrackerView extends JFrame {
@@ -27,6 +28,26 @@ public class ExpenseTrackerView extends JFrame {
 
   private JTextField amountFilterField;
   private JButton amountFilterBtn;
+
+//   private List<Integer> highlightedRows = new ArrayList<>();
+
+
+//   public List<Integer> getHighlightedRows() {
+//     return new ArrayList<>(highlightedRows);
+//   }
+
+//   public void clearHighlightedRows() {
+//     highlightedRows.clear();
+
+//   }
+
+//   public JTextField getAmountFilterField() {
+//     return amountFilterField;
+//   }
+
+// public void setAmountFilterText(String text) {
+//     amountFilterField.setText(text);
+//   }
 
   
 
@@ -79,6 +100,7 @@ public class ExpenseTrackerView extends JFrame {
     buttonPanel.add(amountFilterBtn);
     buttonPanel.add(categoryFilterBtn);
     buttonPanel.add(undoButton); //this is to the button panel
+    // undoButton.setEnabled(false);
   
     // Add panels to frame
     add(inputPanel, BorderLayout.NORTH);
@@ -191,6 +213,9 @@ public class ExpenseTrackerView extends JFrame {
   public void highlightRows(List<Integer> rowIndexes) {
       // The row indices are being used as hashcodes for the transactions.
       // The row index directly maps to the the transaction index in the list.
+      // clearHighlightedRows(); // Clear previous highlights
+      // highlightedRows.addAll(rowIndexes);
+
       transactionsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
           @Override
           public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
