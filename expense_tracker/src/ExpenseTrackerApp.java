@@ -71,11 +71,11 @@ public class ExpenseTrackerApp {
 
     view.getUndoButton().addActionListener(e -> {
         try{
-        int selectedRow = view.getTransactionsTable().getSelectedRow();
-        if (selectedRow >= 0) {
-          view.getUndoButton().setEnabled(true);
-          Transaction selectedTransaction = model.getTransactions().get(selectedRow);
-          controller.undoTransaction(selectedTransaction);
+          int selectedRow = view.getTransactionsTable().getSelectedRow();
+          if (selectedRow >= 0) {
+            // view.getUndoButton().setEnabled(true);
+            Transaction selectedTransaction = model.getTransactions().get(selectedRow);
+            controller.undoTransaction(selectedTransaction);
       }
       }catch(IllegalArgumentException exception) {
       JOptionPane.showMessageDialog(view,"Please select transaction to be deleted");

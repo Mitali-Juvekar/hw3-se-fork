@@ -106,6 +106,14 @@ public class ExpenseTrackerView extends JFrame {
     add(inputPanel, BorderLayout.NORTH);
     add(new JScrollPane(transactionsTable), BorderLayout.CENTER); 
     add(buttonPanel, BorderLayout.SOUTH);
+
+    transactionsTable.getSelectionModel().addListSelectionListener(e -> {
+      int selectedRow = transactionsTable.getSelectedRow();
+      boolean enableUndo = selectedRow >= 0 && selectedRow < transactionsTable.getRowCount() - 1;
+      undoButton.setEnabled(enableUndo);
+  });
+
+    undoButton.setEnabled(false);
   
     // Set frame properties
     setSize(600, 400); // Increase the size for better visibility
