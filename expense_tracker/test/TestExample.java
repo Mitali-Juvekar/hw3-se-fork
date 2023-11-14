@@ -1,5 +1,6 @@
 // package test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -7,6 +8,7 @@ import static org.junit.Assert.fail;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import java.text.ParseException;
@@ -17,6 +19,8 @@ import org.junit.Test;
 import controller.ExpenseTrackerController;
 import model.ExpenseTrackerModel;
 import model.Transaction;
+import model.Filter.AmountFilter;
+import model.Filter.CategoryFilter;
 import view.ExpenseTrackerView;
 
 
@@ -106,6 +110,10 @@ public class TestExample {
     int rowCountAfter = view.getTableModel().getRowCount();
         assertEquals(rowCountBefore , rowCountAfter); // One row should be added
 
+        /***
+         * Validation
+         */
+
         // Check the contents of the table
         assertEquals(1, view.getTransactionsTable().getValueAt(0, 0)); // Serial
         assertEquals(50.0, view.getTransactionsTable().getValueAt(0, 1)); // Amount
@@ -185,6 +193,9 @@ public class TestExample {
 	        // checkTransaction(amount, category, addedTransaction);
         
             controller.undoTransaction(addedTransaction);
+            /***
+         * Validation
+         */
 
             // Post-condition: List of transactions is empty
             assertEquals(1, view.getTableModel().getRowCount());
@@ -225,6 +236,10 @@ public class TestExample {
 	
 	// Perform the action: Remove the transaction
         model.removeTransaction(addedTransaction);
+
+         /***
+         * Validation
+         */
     
         // Post-condition: List of transactions is empty
         List<Transaction> transactions = model.getTransactions();
@@ -235,27 +250,108 @@ public class TestExample {
         assertEquals(0.00, totalCost, 0.01);
     }
 
+    @Test
+    public void testUndoDisallowed() {
+        // Pre condition: Initial rows in the table should be zero
+        assertEquals(0, model.getTransactions().size());
+        assertEquals(0.00, getTotalCost(), 0.01);
+
+        JButton undoButton = view.getUndoButton();
+        assertFalse("Undo button should be disabled when transactions list is empty", undoButton.isEnabled());
+
+        double amount = 50.0;
+	    String category = "food";
+        Transaction addedTransaction = new Transaction(amount, category);
+        model.addTransaction(addedTransaction);
+    
+        // Pre-condition: List of transactions contains only
+	//                the added transaction
+        assertEquals(1, model.getTransactions().size());
+	    Transaction t = model.getTransactions().get(0);
+
+        //Performing Undo expectation is to catch the exception
+        // Transaction t = model.getTransactions().get(0);
+        model.removeTransaction(t);
+
+         /***
+         * Validation
+         */
+    
+        //Number of transactions should be 0
+        assertEquals(0, model.getTransactions().size());
+
+	    //Total amount should be 0
+        // assertEquals(0.00, getTotalCost(), 0.01);
+        JButton undoButton1 = view.getUndoButton();
+        assertFalse("Undo button should be disabled when transactions list is empty", undoButton1.isEnabled());
+    }
+
 
 
     @Test
-    public void testUndoDisallowed() {
-        // Pre-condition: List of transactions is empty
+    public void filterByAmount() {
+        // Pre condition: Initial rows in the table should be zero
         assertEquals(0, model.getTransactions().size());
 
-        // Attempt to undo when the transactions list is empty
-        try {
-            view.getUndoButton().doClick(); // Simulating a button click
-            fail("Expected IllegalArgumentException for undo disallowed, but no exception was thrown.");
-        } catch (IllegalArgumentException e) {
-            // Expected behavior
-            assertTrue(e.getMessage().contains("Please select transaction to be deleted"));
+        //Adding multiple items to the table
+        double[] amount = {10, 200, 10, 30};
+        String[] category = {"food", "travel", "bills", "food"};
+
+        for(int i=0; i<4;i++)
+            assertTrue(controller.addTransaction(amount[i], category[i]));
+
+        //Filtering by amount=10.0 We should see only 2 rows with amount as 10
+        AmountFilter amountFilter = new AmountFilter(10.0);
+        List<Transaction> filteredList = amountFilter.filter(model.getTransactions());
+        controller.setFilter(amountFilter);
+        controller.applyFilter();
+
+        /***
+         * Validation
+         */
+
+        //Number of Transactions in the filtered list should only be 2
+        assertEquals(2,filteredList.size());
+
+        //Amount should be 10.00 for both the transactions
+        for(int i=0;i<2;i++){
+            Transaction t = filteredList.get(i);
+            assertEquals(10.00, t.getAmount(), 0.01);
         }
+    }
 
-        // Post-condition: List of transactions remains empty
+    @Test
+    public void filterByCategory() {
+        // Pre condition: Initial rows in the table should be zero
         assertEquals(0, model.getTransactions().size());
 
-        // Check if the undo button is disabled
-        // assertFalse(view.getUndoButton().isEnabled());
+        //Adding multiple items to the table
+        double[] amount = {10, 100, 10, 50};
+        String[] category = {"food", "food", "travel", "bills"};
+
+        for(int i=0; i<4;i++)
+            assertTrue(controller.addTransaction(amount[i], category[i]));
+
+        //Filtering by category=food We should see only 2 rows with category as food
+        CategoryFilter categoryFilter = new CategoryFilter("food");
+        List<Transaction> filteredList = categoryFilter.filter(model.getTransactions());
+        controller.setFilter(categoryFilter);
+        controller.applyFilter();
+
+        /***
+         * Validation
+         */
+
+        //Number of Transactions in the filtered list should only be 2
+        assertEquals(2,filteredList.size());
+
+        //Category should be "food" for both the transactionss
+        for(int i=0;i<2;i++){
+            Transaction t = filteredList.get(i);
+            assertEquals("food", t.getCategory());
+        }
     }
+
+    
     
 }
